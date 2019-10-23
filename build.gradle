@@ -1,0 +1,78 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            name = "forge"
+            url = "https://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = 'sponge'
+            url = 'https://repo.spongepowered.org/maven'
+        }
+        maven {
+            url = "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
+        classpath 'org.spongepowered:mixingradle:0.6-SNAPSHOT'
+        classpath "gradle.plugin.org.spongepowered:spongegradle:0.8.1"
+    }
+}
+
+apply plugin: "net.minecraftforge.gradle.forge"
+apply plugin: "org.spongepowered.plugin"
+apply plugin: 'org.spongepowered.mixin'
+
+version = modVersion
+group = modGroup
+archivesBaseName = modBaseName
+
+sourceCompatibility = targetCompatibility = 1.8
+compileJava.options.encoding = compileTestJava.options.encoding = 'UTF-8'
+
+sponge {
+    plugin {
+        meta {
+            id = 'cnpc-ntrpg'
+        }
+    }
+}
+
+minecraft {
+    version = project.forgeVersion
+    mappings = project.mcpVersion
+    runDir = "run"
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    implementation('org.spongepowered:spongeforge:' + project.spongeForgeVersion + ':dev') {
+        exclude module: 'testmods'
+    }
+    implementation 'com.github.Sponge-RPG-dev.NT-RPG:NT-RPG:master-SNAPSHOT'
+}
+
+sourceSets {
+    main {
+        ext.refMap = 'mixins.cnpcntrpg.refmap.json'
+    }
+}
+
+processResources {
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include "mcmod.info"
+        expand "version": project.version, "mcversion": project.minecraft.version
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude "mcmod.info"
+    }
+}

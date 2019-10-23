@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "ru.glassspirit.cnpcntrpg.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "mixins.cnpcntrpg.refmap.json",
+  "target": "@env(DEFAULT)",
+  "mixins": [
+    "MixinDataStats",
+    "MixinScriptContainer"
+  ],
+  "minVersion": "0.7.10",
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
