@@ -12,14 +12,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 
-@Mixin(ScriptContainer.class)
+@Mixin(value = ScriptContainer.class, remap = false)
 public abstract class MixinScriptContainer {
 
-    @Shadow(remap = false)
+    @Shadow
     private ScriptEngine engine;
 
-    @Inject(method = "setEngine", at = @At(value = "FIELD", target = "noppes/npcs/controllers/ScriptContainer.init:Z",
-            opcode = Opcodes.PUTFIELD, remap = false), remap = false)
+    /**
+     * @author GlassSpirit
+     * @reason Add NT-RPG engine bindings to every CNPC script container
+     */
+    @Inject(method = "setEngine", at = @At(value = "FIELD", target = "noppes/npcs/controllers/ScriptContainer.init:Z", opcode = Opcodes.PUTFIELD))
     private void onSetEngine(CallbackInfo ci) {
         ScriptEngine rpgEngine = NtRpgPlugin.GlobalScope.jsLoader.getEngine();
         if (rpgEngine != null) {

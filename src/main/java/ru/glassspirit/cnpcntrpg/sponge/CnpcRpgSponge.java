@@ -5,6 +5,7 @@ import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
 import org.slf4j.Logger;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.GameReloadEvent;
@@ -13,7 +14,6 @@ import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.plugin.Dependency;
 import org.spongepowered.api.plugin.Plugin;
 import ru.glassspirit.cnpcntrpg.Configuration;
-import ru.glassspirit.cnpcntrpg.forge.CustomNPCsEventListener;
 
 @Plugin(
         id = "cnpc-ntrpg",
@@ -60,7 +60,7 @@ public class CnpcRpgSponge {
             logger.error("CustomNPCs not found! Plugin will not work!", e);
             return;
         }
-        new CustomNPCsEventListener();
+        Sponge.getEventManager().registerListeners(this, new SpongeEventListener());
         new Commands();
     }
 

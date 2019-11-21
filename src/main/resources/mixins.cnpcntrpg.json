@@ -5,7 +5,10 @@
   "refmap": "mixins.cnpcntrpg.refmap.json",
   "target": "@env(DEFAULT)",
   "mixins": [
+    "MixinCustomNpcs",
+    "MixinDataInventory",
     "MixinDataStats",
+    "MixinEntityNPCInterface",
     "MixinScriptContainer"
   ],
   "minVersion": "0.7.10",
