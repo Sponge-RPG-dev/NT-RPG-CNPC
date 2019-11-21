@@ -6,7 +6,6 @@
   "target": "@env(DEFAULT)",
   "mixins": [
     "MixinCustomNpcs",
-    "MixinDataInventory",
     "MixinDataStats",
     "MixinEntityNPCInterface",
     "MixinScriptContainer"

@@ -5,7 +5,10 @@ import cz.neumimto.rpg.common.exp.ExperienceSources;
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
 import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import noppes.npcs.api.NpcAPI;
@@ -17,6 +20,7 @@ import noppes.npcs.api.event.QuestEvent;
 import noppes.npcs.entity.EntityNPCInterface;
 import org.spongepowered.api.entity.living.player.Player;
 import ru.glassspirit.cnpcntrpg.sponge.CnpcRpgSponge;
+import ru.glassspirit.cnpcntrpg.sponge.ItemizerHelper;
 
 import java.util.*;
 
@@ -101,5 +105,31 @@ public class CustomNPCsEventListener {
                 recentlyDeadNpcs.remove(event.getEntityLiving().getUniqueID());
             }
         }
+    }
+
+    //=========================Itemizer=====================================
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onLivingDrops(LivingDropsEvent event) {
+        if (ItemizerHelper.isItemizerLoaded()) {
+            if (event.getEntityLiving() instanceof EntityNPCInterface) {
+                for (EntityItem item : event.getDrops()) {
+                    ItemStack stack = item.getItem();
+                    if (stack.getDisplayName().startsWith("#IT")) {
+                        String[] str = stack.getDisplayName().split("#");
+                        if (str[2].equalsIgnoreCase("id")) {
+                            int quantity = item.getItem().getCount();
+                            item.setItem((ItemStack) (Object) ItemizerHelper.getItemService().retrieve(str[3]).orElse(org.spongepowered.api.item.inventory.ItemStack.empty()));
+                            item.getItem().setCount(item.getItem().getCount() * quantity);
+                        } else if (str[2].equalsIgnoreCase("pool")) {
+                            int quantity = item.getItem().getCount();
+                            item.setItem((ItemStack) (Object) ItemizerHelper.getItemService().fetch(str[3]).orElse(org.spongepowered.api.item.inventory.ItemStack.empty()));
+                            item.getItem().setCount(item.getItem().getCount() * quantity);
+                        }
+                    }
+                }
+            }
+        }
+
     }
 }
