@@ -4,14 +4,14 @@ This mod/sponge plugin allows you to combine two wonderful things: CustomNPCs mo
 ## Feature list
 1. Gaining NT-RPG experience for killing mobs (PVE exp source).
 2. Gaining NT-RPG experience for completing quests (QUESTING exp source).
-3. CustomNPCs scripts now have access to all NT-RPG scripts bindings. 
+3. CustomNPCs scripts now have access to all NT-RPG scripts bindings. (MIXINS)
 To give access to new variables or functions, use this
 ```javascript
 var yourThing = {/*something*/};
 Bindings.getScriptEngine().put("YourThing", yourThing);
 // Now you can use it in any CNPC script 
 ```
-4. Moved `NpcEvent.DamagedEvent` after NT-RPG damage calculations, alse `DAMAGE_CHECK` damage type doesn't trigger this event.
+4. Moved `NpcEvent.DamagedEvent` after NT-RPG damage calculations, alse `DAMAGE_CHECK` damage type doesn't trigger this event. (MIXINS)
 5. [Itemizer plugin](https://github.com/OnapleRPG/Itemizer) support. To use it, just name any item like this `#IT#id#yourid` or `#IT#pool#yourid` and place into NPC drop inventory.
 ## Configuration
 ==TODO==
