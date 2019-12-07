@@ -1,4 +1,4 @@
-package ru.glassspirit.cnpcntrpg.mixin;
+package ru.glassspirit.cnpcntrpg.mixin.impl;
 
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import noppes.npcs.CustomNpcs;

@@ -1,14 +1,20 @@
 {
   "required": true,
-  "package": "ru.glassspirit.cnpcntrpg.mixin",
+  "package": "ru.glassspirit.cnpcntrpg.mixin.impl",
   "compatibilityLevel": "JAVA_8",
   "refmap": "mixins.cnpcntrpg.refmap.json",
   "target": "@env(DEFAULT)",
   "mixins": [
+    "MixinAvailablilty",
     "MixinCustomNpcs",
     "MixinDataInventory",
     "MixinDataStats",
+    "MixinDialog",
+    "MixinDialogOption",
     "MixinEntityNPCInterface",
+    "MixinNoppesUtilPlayer",
+    "MixinNoppesUtilServer",
+    "MixinPacketHandlerServer",
     "MixinScriptContainer"
   ],
   "minVersion": "0.7.10",

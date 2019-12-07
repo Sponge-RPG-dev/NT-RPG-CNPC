@@ -1,4 +1,4 @@
-package ru.glassspirit.cnpcntrpg.mixin;
+package ru.glassspirit.cnpcntrpg.mixin.impl;
 
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;

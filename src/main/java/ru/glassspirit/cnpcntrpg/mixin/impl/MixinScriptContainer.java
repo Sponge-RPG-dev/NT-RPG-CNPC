@@ -1,4 +1,4 @@
-package ru.glassspirit.cnpcntrpg.mixin;
+package ru.glassspirit.cnpcntrpg.mixin.impl;
 
 import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import noppes.npcs.controllers.ScriptContainer;

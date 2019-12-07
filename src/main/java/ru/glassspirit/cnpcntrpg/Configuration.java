@@ -16,6 +16,9 @@ public class Configuration {
     public boolean NPC_KILLS_EXP_RPG = true;
 
     @Setting(value = "npc_kills_exp_minecraft", comment = "Minecraft experience for killing NPCs")
-    public boolean NPC_KILLS_EXP_MINECRAFT = true;
+    public boolean NPC_KILLS_EXP_MINECRAFT = false;
+
+    @Setting(value = "availability_rpg_level", comment = "Use RPG character level for availability checks")
+    public boolean AVAILABILITY_RPG_LEVEL = true;
 
 }

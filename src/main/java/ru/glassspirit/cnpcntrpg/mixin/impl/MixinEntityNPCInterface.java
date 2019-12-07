@@ -1,4 +1,4 @@
-package ru.glassspirit.cnpcntrpg.mixin;
+package ru.glassspirit.cnpcntrpg.mixin.impl;
 
 import noppes.npcs.api.event.NpcEvent;
 import noppes.npcs.entity.EntityNPCInterface;

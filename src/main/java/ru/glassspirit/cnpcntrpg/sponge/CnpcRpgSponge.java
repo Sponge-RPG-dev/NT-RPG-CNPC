@@ -19,7 +19,7 @@ import ru.glassspirit.cnpcntrpg.Configuration;
         id = "cnpc-ntrpg",
         name = "NT-RPG CustomNPCs Bridge",
         description = "Plugin that connects NT-RPG plugin and CustomNPCs mod and adds some useful stuff",
-        version = "1.2",
+        version = "1.3",
         authors = {"GlassSpirit"},
         dependencies = {
                 @Dependency(id = "nt-rpg"),
@@ -32,6 +32,8 @@ public class CnpcRpgSponge {
 
     public static Configuration configuration;
 
+    public static CnpcRpgSponge instance;
+
     @Inject
     private Logger logger;
 
@@ -41,6 +43,7 @@ public class CnpcRpgSponge {
 
     @Listener
     public void onGameInitialization(GameInitializationEvent event) {
+        instance = this;
         configuration = new Configuration();
         loadConfig();
     }
