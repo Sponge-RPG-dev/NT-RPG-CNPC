@@ -1,6 +1,6 @@
 package ru.glassspirit.cnpcntrpg.mixin.impl;
 
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.api.Rpg;
 import net.minecraft.entity.player.EntityPlayerMP;
 import noppes.npcs.EventHooks;
 import noppes.npcs.NoppesUtilPlayer;
@@ -69,7 +69,7 @@ public abstract class MixinNoppesUtilPlayer {
                                 NoppesUtilServer.runCommand(npc, npc.getName(), option.command, player);
                             } else if (option.optionType == 5 /* Script option */) {
                                 try {
-                                    ScriptEngine engine = NtRpgPlugin.GlobalScope.jsLoader.getEngine();
+                                    ScriptEngine engine = Rpg.get().getScriptEngine().getEngine();
                                     IMixinDialogOption optionScripted = (IMixinDialogOption) option;
                                     if (optionScripted.getScript() instanceof String) {
                                         optionScripted.setScript(engine.eval((String) optionScripted.getScript()));

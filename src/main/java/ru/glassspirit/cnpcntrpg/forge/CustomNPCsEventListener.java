@@ -1,10 +1,11 @@
 package ru.glassspirit.cnpcntrpg.forge;
 
+import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.configuration.PluginConfig;
 import cz.neumimto.rpg.api.utils.Pair;
 import cz.neumimto.rpg.common.exp.ExperienceSources;
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
 import cz.neumimto.rpg.sponge.entities.players.ISpongeCharacter;
-import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterServise;
+import cz.neumimto.rpg.sponge.entities.players.SpongeCharacterService;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -20,20 +21,16 @@ import ru.glassspirit.cnpcntrpg.sponge.CnpcRpgSponge;
 
 import java.util.*;
 
-import static cz.neumimto.rpg.sponge.NtRpgPlugin.pluginConfig;
-
 public class CustomNPCsEventListener {
 
-    private SpongeCharacterServise characterService;
+    private SpongeCharacterService characterService = (SpongeCharacterService) Rpg.get().getCharacterService();
+    private PluginConfig pluginConfig = Rpg.get().getPluginConfig();
 
     /**
      * Used for dirty hacking cnpc "minecraft orb" exp drops using two events
      */
     private Map<UUID, Pair<Integer, Integer>> recentlyDeadNpcs = new HashMap<>();
 
-    public CustomNPCsEventListener() {
-        characterService = NtRpgPlugin.GlobalScope.characterService;
-    }
 
     //=========================QUEST EXP=====================================
 

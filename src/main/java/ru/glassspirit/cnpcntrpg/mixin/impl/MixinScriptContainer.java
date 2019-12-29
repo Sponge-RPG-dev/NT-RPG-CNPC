@@ -1,6 +1,6 @@
 package ru.glassspirit.cnpcntrpg.mixin.impl;
 
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.api.Rpg;
 import noppes.npcs.controllers.ScriptContainer;
 import org.spongepowered.asm.lib.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,7 +24,7 @@ public abstract class MixinScriptContainer {
      */
     @Inject(method = "setEngine", at = @At(value = "FIELD", target = "noppes/npcs/controllers/ScriptContainer.init:Z", opcode = Opcodes.PUTFIELD))
     private void onSetEngine(CallbackInfo ci) {
-        ScriptEngine rpgEngine = NtRpgPlugin.GlobalScope.jsLoader.getEngine();
+        ScriptEngine rpgEngine = Rpg.get().getScriptEngine().getEngine();
         if (rpgEngine != null) {
             this.engine.getBindings(ScriptContext.ENGINE_SCOPE).putAll(rpgEngine.getBindings(ScriptContext.ENGINE_SCOPE));
         }

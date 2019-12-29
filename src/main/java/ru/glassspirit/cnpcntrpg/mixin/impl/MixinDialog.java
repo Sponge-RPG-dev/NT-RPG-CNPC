@@ -1,6 +1,6 @@
 package ru.glassspirit.cnpcntrpg.mixin.impl;
 
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.api.Rpg;
 import net.minecraft.entity.player.EntityPlayer;
 import noppes.npcs.api.NpcAPI;
 import noppes.npcs.controllers.data.Dialog;
@@ -36,7 +36,7 @@ public class MixinDialog implements IMixinDialog {
             String function = text.substring(startIndex + scriptMark.length(), endIndex);
             String result = "";
             try {
-                ScriptEngine engine = NtRpgPlugin.GlobalScope.jsLoader.getEngine();
+                ScriptEngine engine = Rpg.get().getScriptEngine().getEngine();
                 Object func = engine.eval(" function(dialog, player, npc) { " + function + " }");
                 engine.eval("var runScriptDialog = function(f, dialog, player, npc) {\n" +
                         "    return f(dialog, player, npc);\n" +

@@ -5,7 +5,7 @@ This mod/sponge plugin allows you to combine two wonderful things: CustomNPCs mo
 ## Feature list  
 1. Gain NT-RPG experience for killing mobs (PVE exp source).  
 2. Gain NT-RPG experience for completing quests (QUESTING exp source).
-3. Use RPG character level for all Availability checks. (MIXINS) 
+3. Use NT-RPG character level for all Availability checks. (MIXINS) 
 4. CustomNPCs scripts now have access to all NT-RPG scripts bindings. (MIXINS)  
 To give access to new variables or functions, use  
 ```javascript  
@@ -15,7 +15,7 @@ Bindings.getScriptEngine().put("YourThing", yourThing);
 ```
 5. Moved `NpcEvent.DamagedEvent` after NT-RPG damage calculations, also `DAMAGE_CHECK` damage type doesnt trigger this event. (MIXINS)  
 6. [Itemizer plugin](https://github.com/OnapleRPG/Itemizer) support. To use it, just name any item like this `#IT#id#yourid` or `#IT#pool#yourid` and place into NPC drop inventory. (MIXINS)  
-7. Dialogs can now contain scripts. To use them, just define start and end of script inside dialog with `$$$`. Available variables are `player`, `npc` and `dialog`. (MIXINS) Example:  
+7. Dialogs can now contain scripts. To use them, just mark start and end of script inside dialog with `$$$`. Available variables are `player`, `npc` and `dialog`. (MIXINS) Example:  
 ![Dialog creation](https://media.discordapp.net/attachments/602853258486087683/652101925789237288/unknown.png?width=1442&height=591)
 ![Dialog in game](https://media.discordapp.net/attachments/602853258486087683/652101985792688168/unknown.png?width=892&height=676)
 Dialog options can also run scripts, but for this they need to be configured inside the dialog files and put `"OptionType": 5`.

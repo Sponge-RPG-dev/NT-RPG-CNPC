@@ -1,6 +1,6 @@
 package ru.glassspirit.cnpcntrpg.mixin.impl;
 
-import cz.neumimto.rpg.sponge.NtRpgPlugin;
+import cz.neumimto.rpg.api.Rpg;
 import net.minecraft.entity.player.EntityPlayer;
 import noppes.npcs.controllers.data.Availability;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,7 +19,7 @@ public class MixinAvailablilty {
     @Inject(method = "isAvailable(Lnet/minecraft/entity/player/EntityPlayer;)Z", at = @At("TAIL"), cancellable = true)
     private void onIsAvailable(EntityPlayer player, CallbackInfoReturnable<Boolean> ci) {
         if (CnpcRpgSponge.configuration.AVAILABILITY_RPG_LEVEL) {
-            ci.setReturnValue(NtRpgPlugin.GlobalScope.characterService.getCharacter(player.getUniqueID()).getLevel() >= this.minPlayerLevel);
+            ci.setReturnValue(Rpg.get().getCharacterService().getCharacter(player.getUniqueID()).getLevel() >= this.minPlayerLevel);
         }
     }
 
