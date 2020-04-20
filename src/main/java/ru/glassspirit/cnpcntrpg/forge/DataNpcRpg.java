@@ -3,6 +3,8 @@ package ru.glassspirit.cnpcntrpg.forge;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.api.entity.PropertyService;
 import noppes.npcs.controllers.ScriptContainer;
 import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.entity.data.DataScript;
@@ -35,19 +37,28 @@ public class DataNpcRpg extends DataScript {
         mainContainer.appandConsole("This is RPG data of NPC.");
         mainContainer.appandConsole("Do not create new tabs or attach scripts (THIS IS NOT A SCRIPTING GUI!!!)");
         mainContainer.appandConsole("1. First tab is for additional NPC data");
-        mainContainer.appandConsole("2. Second tab is for default nt-rpg properties");
+        mainContainer.appandConsole("2. Second tab is for nt-rpg properties");
 
         Map<String, Object> dataMap = new TreeMap<>();
         dataMap.put("Level", ((IMixinDataStats) npc.stats).getLevel());
+        dataMap.put("CustomData", ((IMixinDataStats) npc.stats).getCustomData());
 
         mainContainer.script += gson.toJson(dataMap);
         this.getScripts().add(mainContainer);
     }
 
     private void initProperties() {
-        ScriptContainer container = new ScriptContainer(this);
+        PropertyService propertyService = Rpg.get().getPropertyService();
 
-        container.script += "properties doesn't work yet"; //TODO properties
+        ScriptContainer container = new ScriptContainer(this);
+        Map<String, Float> properties = ((IMixinDataStats) npc.stats).getProperties();
+
+        Map<String, Object> dataMap = new TreeMap<>();
+        for (String prop : propertyService.getAllProperties()) {
+            if (properties.get(prop) != null) dataMap.put(prop, properties.get(prop));
+        }
+
+        container.script += gson.toJson(dataMap);
         this.getScripts().add(container);
     }
 
@@ -62,10 +73,15 @@ public class DataNpcRpg extends DataScript {
         }.getType());
 
         ((IMixinDataStats) npc.stats).setLevel(((Double) dataMap.get("Level")).intValue());
+        ((IMixinDataStats) npc.stats).getCustomData().putAll((Map<String, Object>) dataMap.get("CustomData"));
     }
 
     private void applyProperties() {
-        //TODO properties
+        String data = this.getScripts().get(1).script;
+        Map<String, Float> dataMap = gson.fromJson(data, new TypeToken<TreeMap<String, Float>>() {
+        }.getType());
+
+        ((IMixinDataStats) npc.stats).getProperties().putAll(dataMap);
     }
 
 }
