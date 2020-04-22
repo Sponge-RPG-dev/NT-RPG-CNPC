@@ -1,6 +1,7 @@
 package ru.glassspirit.cnpcntrpg.mixin.impl;
 
 import com.google.gson.Gson;
+import com.google.gson.internal.LinkedTreeMap;
 import net.minecraft.nbt.NBTTagCompound;
 import noppes.npcs.entity.data.DataStats;
 import org.spongepowered.asm.mixin.Mixin;
@@ -11,7 +12,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import ru.glassspirit.cnpcntrpg.mixin.IMixinDataStats;
 
 import java.util.Map;
-import java.util.TreeMap;
 
 @Mixin(DataStats.class)
 public abstract class MixinDataStats implements IMixinDataStats {
@@ -19,8 +19,8 @@ public abstract class MixinDataStats implements IMixinDataStats {
     private static final Gson gson = new Gson();
 
     private int level;
-    private Map<String, Object> customData = new TreeMap<>();
-    private Map<String, Double> properties = new TreeMap<>();
+    private Map<String, Object> customData = new LinkedTreeMap<>();
+    private Map<String, Double> properties = new LinkedTreeMap<>();
 
     @Inject(method = "writeToNBT", at = @At("TAIL"), remap = false)
     private void injectWriteNbt(NBTTagCompound tag, CallbackInfoReturnable<NBTTagCompound> ci) {
@@ -33,10 +33,10 @@ public abstract class MixinDataStats implements IMixinDataStats {
     private void injectReadNbt(NBTTagCompound tag, CallbackInfo ci) {
         this.level = tag.getInteger("Level");
 
-        Map<String, Object> customDataMap = gson.fromJson(tag.getString("CustomData"), TreeMap.class);
+        Map<String, Object> customDataMap = gson.fromJson(tag.getString("CustomData"), LinkedTreeMap.class);
         if (customDataMap != null) this.customData.putAll(customDataMap);
 
-        Map<String, Double> propertiesMap = gson.fromJson(tag.getString("Properties"), TreeMap.class);
+        Map<String, Double> propertiesMap = gson.fromJson(tag.getString("Properties"), LinkedTreeMap.class);
         if (propertiesMap != null) this.properties.putAll(propertiesMap);
     }
 
