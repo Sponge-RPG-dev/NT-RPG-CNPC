@@ -3,10 +3,12 @@ package ru.glassspirit.cnpcntrpg.mixin.impl;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.PacketHandlerServer;
 import noppes.npcs.Server;
 import noppes.npcs.constants.EnumPacketClient;
 import noppes.npcs.constants.EnumPacketServer;
+import noppes.npcs.controllers.LinkedNpcController;
 import noppes.npcs.entity.EntityNPCInterface;
 import org.spongepowered.asm.lib.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,6 +28,7 @@ public class MixinPacketHandlerServer {
             DataNpcRpg data = new DataNpcRpg(npc, true);
             NBTTagCompound compound = data.writeToNBT(new NBTTagCompound());
 
+            NoppesUtilServer.setEditingNpc(player, npc);
             Server.sendData(player, EnumPacketClient.GUI_DATA, compound);
         }
     }
@@ -41,6 +44,12 @@ public class MixinPacketHandlerServer {
             try {
                 data.readFromNBT(Server.readNBT(buffer));
                 data.apply();
+
+                npc.reset();
+                if (npc.linkedData != null) {
+                    LinkedNpcController.Instance.saveNpcData(npc);
+                }
+                NoppesUtilServer.setEditingNpc(player, null);
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -57,8 +57,9 @@ public class DataNpcRpg extends DataScript {
         Map<String, Float> properties = ((IMixinDataStats) npc.stats).getProperties();
 
         Map<String, Object> dataMap = new TreeMap<>();
-        for (String prop : propertyService.getAllProperties()) {
-            if (properties.get(prop) != null) dataMap.put(prop, properties.get(prop));
+
+        for (String prop : properties.keySet()) {
+            dataMap.put(prop, properties.get(prop));
         }
 
         container.script += gson.toJson(dataMap);

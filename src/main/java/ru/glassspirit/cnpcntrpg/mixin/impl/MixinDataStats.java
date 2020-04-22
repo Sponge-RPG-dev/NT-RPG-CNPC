@@ -32,8 +32,12 @@ public abstract class MixinDataStats implements IMixinDataStats {
     @Inject(method = "readToNBT", at = @At("TAIL"), remap = false)
     private void injectReadNbt(NBTTagCompound tag, CallbackInfo ci) {
         this.level = tag.getInteger("Level");
-        this.customData.putAll(gson.fromJson(tag.getString("CustomData"), TreeMap.class));
-        this.properties.putAll(gson.fromJson(tag.getString("Properties"), TreeMap.class));
+
+        Map<String, Object> customDataMap = gson.fromJson(tag.getString("CustomData"), TreeMap.class);
+        if (customDataMap != null) this.customData.putAll(customDataMap);
+
+        Map<String, Float> propertiesMap = gson.fromJson(tag.getString("Properties"), TreeMap.class);
+        if (propertiesMap != null) this.properties.putAll(propertiesMap);
     }
 
     @Override
