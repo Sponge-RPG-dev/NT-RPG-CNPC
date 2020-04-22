@@ -3,24 +3,24 @@
 # CustomNPCs NT-RPG plugin  
 This mod/sponge plugin allows you to combine two wonderful things: CustomNPCs mod and NT-RPG plugin, and also adds new useful features.  
 ## Feature list  
-1. Gain NT-RPG experience for killing mobs (PVE exp source).  
+1. Gain NT-RPG experience for killing mobs (PVE exp source). Also disable "minecraft orb" experience drops  
 2. Gain NT-RPG experience for completing quests (QUESTING exp source).
-3. Use NT-RPG character level for all Availability checks. (MIXINS) 
+3. Use NT-RPG character level for all Availability checks (quests, dialogs, barriers). (MIXINS) 
 4. CustomNPCs scripts now have access to all NT-RPG scripts bindings. (MIXINS)  
-To give access to new variables or functions, use  
+To give access to new variables or functions, write this lines in some NT-RPG script
 ```javascript  
 var yourThing = {/*something*/};
 Bindings.getScriptEngine().put("YourThing", yourThing);  
 // Now you can use it in any CNPC script 
 ```
-5. Moved `NpcEvent.DamagedEvent` after NT-RPG damage calculations, also `DAMAGE_CHECK` damage type doesnt trigger this event. (MIXINS)  
-6. [Itemizer plugin](https://github.com/OnapleRPG/Itemizer) support. To use it, just name any item like this `#IT#id#yourid` or `#IT#pool#yourid` and place into NPC drop inventory. (MIXINS)  
+5. Moved `NpcEvent.DamagedEvent` after NT-RPG damage calculations (MIXINS)  
+6. [Itemizer plugin](https://github.com/OnapleRPG/Itemizer) support. To use it, name any item like `#IT#id#yourid` or `#IT#pool#yourid` and place into NPC drop inventory. (MIXINS)  
 7. Dialogs can now contain scripts. To use them, just mark start and end of script inside dialog with `$$$`. Available variables are `player`, `npc` and `dialog`. (MIXINS) Example:  
 ![Dialog creation](https://media.discordapp.net/attachments/602853258486087683/652101925789237288/unknown.png?width=1442&height=591)
 ![Dialog in game](https://media.discordapp.net/attachments/602853258486087683/652101985792688168/unknown.png?width=892&height=676)
 Dialog options can also run scripts, but for this they need to be configured inside the dialog files and put `"OptionType": 5`.
-## Configuration  
-==TODO==  
+8. Store any additional data inside NPCs NBT (use command /npc data while looking at NPC). (MIXINS)
+9. NPCs can contain NT-RPG properties (use command /npc data while looking at NPC). (MIXINS)
 ## Installation  
 Plugin requires [CustomNPCs mod by Noppes](https://www.curseforge.com/minecraft/mc-mods/custom-npcs) and [NT-RPG plugin by NeumimTo](https://github.com/Sponge-RPG-dev/NT-RPG) to be installed and configured on SpongeForge server.  
 This project uses [Sponge Mixins](https://github.com/SpongePowered/Mixin). Mixins allow to add new things to existing mods (even without open source code, which is the CustomNPCs mod) or change the mechanics without much effort.  

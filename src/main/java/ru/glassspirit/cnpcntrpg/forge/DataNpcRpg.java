@@ -37,7 +37,10 @@ public class DataNpcRpg extends DataScript {
         mainContainer.appandConsole("This is RPG data of NPC.");
         mainContainer.appandConsole("Do not create new tabs or attach scripts (THIS IS NOT A SCRIPTING GUI!!!)");
         mainContainer.appandConsole("1. First tab is for additional NPC data");
-        mainContainer.appandConsole("2. Second tab is for nt-rpg properties");
+        mainContainer.appandConsole("2. Second tab is for nt-rpg properties. Available properties (name:default value):");
+        for (String prop : Rpg.get().getPropertyService().getAllProperties()) {
+            mainContainer.appandConsole(prop + ":" + Rpg.get().getPropertyService().getDefault(Rpg.get().getPropertyService().getIdByName(prop)));
+        }
 
         Map<String, Object> dataMap = new TreeMap<>();
         dataMap.put("Level", ((IMixinDataStats) npc.stats).getLevel());
