@@ -10,6 +10,6 @@ public interface IMixinDataStats {
 
     Map<String, Object> getCustomData();
 
-    Map<String, Float> getProperties();
+    Map<String, Double> getProperties();
 
 }

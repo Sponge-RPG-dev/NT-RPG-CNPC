@@ -20,7 +20,7 @@ public abstract class MixinDataStats implements IMixinDataStats {
 
     private int level;
     private Map<String, Object> customData = new TreeMap<>();
-    private Map<String, Float> properties = new TreeMap<>();
+    private Map<String, Double> properties = new TreeMap<>();
 
     @Inject(method = "writeToNBT", at = @At("TAIL"), remap = false)
     private void injectWriteNbt(NBTTagCompound tag, CallbackInfoReturnable<NBTTagCompound> ci) {
@@ -36,7 +36,7 @@ public abstract class MixinDataStats implements IMixinDataStats {
         Map<String, Object> customDataMap = gson.fromJson(tag.getString("CustomData"), TreeMap.class);
         if (customDataMap != null) this.customData.putAll(customDataMap);
 
-        Map<String, Float> propertiesMap = gson.fromJson(tag.getString("Properties"), TreeMap.class);
+        Map<String, Double> propertiesMap = gson.fromJson(tag.getString("Properties"), TreeMap.class);
         if (propertiesMap != null) this.properties.putAll(propertiesMap);
     }
 
@@ -56,7 +56,7 @@ public abstract class MixinDataStats implements IMixinDataStats {
     }
 
     @Override
-    public Map<String, Float> getProperties() {
+    public Map<String, Double> getProperties() {
         return properties;
     }
 }

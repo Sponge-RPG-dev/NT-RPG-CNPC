@@ -19,10 +19,10 @@ public class CnpcRpgEntityHandler extends AbstractEntityService.EntityHandler<Sp
     @Override
     public SpongeMob initializeEntity(MobSettingsDao dao, SpongeMob iEntity, String dimName, String type) {
         if (iEntity.getEntity() instanceof EntityNPCInterface) {
-            Map<String, Float> properties = ((IMixinDataStats) ((EntityNPCInterface) iEntity.getEntity()).stats).getProperties();
-            for (Map.Entry<String, Float> prop : properties.entrySet()) {
+            Map<String, Double> properties = ((IMixinDataStats) ((EntityNPCInterface) iEntity.getEntity()).stats).getProperties();
+            for (Map.Entry<String, Double> prop : properties.entrySet()) {
                 if (Rpg.get().getPropertyService().exists(prop.getKey()))
-                    iEntity.setProperty(Rpg.get().getPropertyService().getIdByName(prop.getKey()), prop.getValue());
+                    iEntity.setProperty(Rpg.get().getPropertyService().getIdByName(prop.getKey()), prop.getValue().floatValue());
             }
             return iEntity;
         } else return super.initializeEntity(dao, iEntity, dimName, type);

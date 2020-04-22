@@ -54,7 +54,7 @@ public class DataNpcRpg extends DataScript {
         PropertyService propertyService = Rpg.get().getPropertyService();
 
         ScriptContainer container = new ScriptContainer(this);
-        Map<String, Float> properties = ((IMixinDataStats) npc.stats).getProperties();
+        Map<String, Double> properties = ((IMixinDataStats) npc.stats).getProperties();
 
         Map<String, Object> dataMap = new TreeMap<>();
 
@@ -82,7 +82,7 @@ public class DataNpcRpg extends DataScript {
 
     private void applyProperties() {
         String data = this.getScripts().get(1).script;
-        Map<String, Float> dataMap = gson.fromJson(data, new TypeToken<TreeMap<String, Float>>() {
+        Map<String, Double> dataMap = gson.fromJson(data, new TypeToken<TreeMap<String, Float>>() {
         }.getType());
 
         ((IMixinDataStats) npc.stats).getProperties().putAll(dataMap);
