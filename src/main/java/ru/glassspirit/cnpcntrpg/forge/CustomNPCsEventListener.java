@@ -10,16 +10,16 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import noppes.npcs.api.NpcAPI;
-import noppes.npcs.api.constants.EntityType;
 import noppes.npcs.api.entity.ICustomNpc;
 import noppes.npcs.api.entity.data.INPCInventory;
 import noppes.npcs.api.event.NpcEvent;
 import noppes.npcs.api.event.QuestEvent;
 import noppes.npcs.entity.EntityNPCInterface;
-import org.spongepowered.api.entity.living.player.Player;
 import ru.glassspirit.cnpcntrpg.sponge.CnpcRpgSponge;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class CustomNPCsEventListener {
 
@@ -53,38 +53,9 @@ public class CustomNPCsEventListener {
     public void onNpcDeath(NpcEvent.DiedEvent event) {
         ICustomNpc npc = event.npc;
         INPCInventory inv = npc.getInventory();
-
-        if (CnpcRpgSponge.configuration.NPC_KILLS_EXP_RPG) {
-            if (event.damageSource.getTrueSource().typeOf(EntityType.PLAYER)) {
-                ISpongeCharacter character = characterService.getCharacter(UUID.fromString(event.damageSource.getTrueSource().getUUID()));
-                if (character != null && !character.isStub()) {
-                    int experience = inv.getExpRNG();
-                    if (experience > 0) {
-                        if (character.hasParty()) {
-                            experience *= pluginConfig.PARTY_EXPERIENCE_MULTIPLIER;
-                            double dist = Math.pow(pluginConfig.PARTY_EXPERIENCE_SHARE_DISTANCE, 2);
-                            Set<ISpongeCharacter> set = new HashSet<>();
-                            for (ISpongeCharacter member : character.getParty().getPlayers()) {
-                                Player player = member.getPlayer();
-                                if (player.getLocation().getPosition()
-                                        .distanceSquared(character.getPlayer().getLocation().getPosition()) <= dist) {
-                                    set.add(member);
-                                }
-                            }
-                            experience /= set.size();
-                            for (ISpongeCharacter character1 : set) {
-                                characterService.addExperiences(character1, experience, ExperienceSources.PVE);
-                            }
-                        } else {
-                            characterService.addExperiences(character, experience, ExperienceSources.PVE);
-                        }
-                    }
-                }
-            }
-        }
         if (!CnpcRpgSponge.configuration.NPC_KILLS_EXP_MINECRAFT) {
             recentlyDeadNpcs.put(npc.getMCEntity().getUniqueID(), new Pair<>(inv.getExpMin(), inv.getExpMax()));
-            event.npc.getInventory().setExp(0, 0);
+            inv.setExp(0, 0);
         }
     }
 

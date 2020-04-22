@@ -1,6 +1,9 @@
 package ru.glassspirit.cnpcntrpg.sponge;
 
 import com.google.inject.Inject;
+import cz.neumimto.rpg.api.Rpg;
+import cz.neumimto.rpg.sponge.damage.SpongeDamageService;
+import cz.neumimto.rpg.sponge.entities.SpongeEntityService;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMapper;
@@ -65,6 +68,9 @@ public class CnpcRpgSponge {
         }
         Sponge.getEventManager().registerListeners(this, new SpongeEventListener());
         new Commands();
+
+        ((SpongeEntityService) Rpg.get().getEntityService()).setEntityHandler(new CnpcRpgEntityHandler());
+        ((SpongeDamageService) Rpg.get().getDamageService()).setDamageHandler(new CnpcRpgDamageHandler());
     }
 
     private void loadConfig() {

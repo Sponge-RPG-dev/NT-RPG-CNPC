@@ -58,6 +58,11 @@ dependencies {
     implementation 'com.github.Sponge-RPG-dev.NT-RPG:Sponge-7:2.1.0-SNAPSHOT'
 }
 
+configurations.all {
+    resolutionStrategy.cacheDynamicVersionsFor 10, 'minutes'
+    resolutionStrategy.cacheChangingModulesFor 10, 'minutes'
+}
+
 sourceSets {
     main {
         ext.refMap = 'mixins.cnpcntrpg.refmap.json'
