@@ -1,7 +1,9 @@
 package ru.glassspirit.cnpcntrpg.forge;
 
 import com.electronwill.nightconfig.core.Config;
-import com.electronwill.nightconfig.hocon.HoconFormat;
+import com.electronwill.nightconfig.core.io.ConfigParser;
+import com.electronwill.nightconfig.core.io.ConfigWriter;
+import com.electronwill.nightconfig.json.JsonFormat;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
@@ -19,8 +21,11 @@ public class DataNpcRpg extends DataScript {
 
     public static final Map<UUID, UUID> playersEditingRpgData = new HashMap<>();
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private static final String emptyEffectsString = "Effects: [\n]";
-    private static final Config emptyEffectsConfig = HoconFormat.instance().createParser().parse(emptyEffectsString);
+    private static final ConfigParser<Config> parser = JsonFormat.minimalInstance().createParser();
+    private static final ConfigWriter fancyWriter = JsonFormat.fancyInstance().createWriter();
+    private static final ConfigWriter minimalWriter = JsonFormat.minimalInstance().createWriter();
+
+    private static final Config emptyEffectsConfig = parser.parse("{\"Effects\":[]}");
 
     private EntityNPCInterface npc;
 
@@ -61,11 +66,13 @@ public class DataNpcRpg extends DataScript {
     private void initEffects() {
         ScriptContainer container = new ScriptContainer(this);
         String effectsString = ((IMixinDataStats) npc.stats).getDefaultEffects().trim();
-        if (effectsString.isEmpty()) effectsString = emptyEffectsString;
+        Config conf;
+        if (effectsString.isEmpty()) {
+            conf = emptyEffectsConfig;
+        } else conf = parser.parse(effectsString);
 
-        Config conf = HoconFormat.instance().createParser().parse(effectsString);
         if (!conf.contains("Effects")) conf = emptyEffectsConfig;
-        container.script += HoconFormat.instance().createWriter().writeToString(conf);
+        container.script += fancyWriter.writeToString(conf);
 
         this.getScripts().add(container);
     }
@@ -95,11 +102,16 @@ public class DataNpcRpg extends DataScript {
 
     private void applyEffects() {
         String data = this.getScripts().get(2).script;
-        Config conf = HoconFormat.instance().createParser().parse(data);
-        if (!conf.contains("Effects")) {
+        if (data.trim().isEmpty()) {
+            ((IMixinDataStats) npc.stats).setDefaultEffects("");
+            return;
+        }
+
+        Config conf = parser.parse(data);
+        if (!conf.contains("Effects") || conf.equals(emptyEffectsConfig)) {
             ((IMixinDataStats) npc.stats).setDefaultEffects("");
         } else {
-            ((IMixinDataStats) npc.stats).setDefaultEffects(HoconFormat.instance().createWriter().writeToString(conf));
+            ((IMixinDataStats) npc.stats).setDefaultEffects(minimalWriter.writeToString(conf));
         }
     }
 

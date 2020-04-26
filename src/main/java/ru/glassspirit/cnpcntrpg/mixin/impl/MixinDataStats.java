@@ -22,7 +22,7 @@ public abstract class MixinDataStats implements IMixinDataStats {
     private Map<String, Object> customData = new LinkedTreeMap<>();
     private Map<String, Double> storedProperties = new LinkedTreeMap<>();
 
-    private String defaultEffects;
+    private String defaultEffects = "";
 
     @Inject(method = "writeToNBT", at = @At("TAIL"), remap = false)
     private void injectWriteNbt(NBTTagCompound tag, CallbackInfoReturnable<NBTTagCompound> ci) {
