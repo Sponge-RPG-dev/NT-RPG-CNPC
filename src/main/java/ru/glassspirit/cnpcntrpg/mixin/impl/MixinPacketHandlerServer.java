@@ -28,8 +28,8 @@ public class MixinPacketHandlerServer {
             DataNpcRpg data = new DataNpcRpg(npc, true);
             NBTTagCompound compound = data.writeToNBT(new NBTTagCompound());
 
-            NoppesUtilServer.setEditingNpc(player, npc);
             Server.sendData(player, EnumPacketClient.GUI_DATA, compound);
+            NoppesUtilServer.setEditingNpc(player, npc);
         }
     }
 
@@ -38,6 +38,7 @@ public class MixinPacketHandlerServer {
     private void onScriptDataSave(EnumPacketServer type, ByteBuf buffer, EntityPlayerMP player, EntityNPCInterface npc, CallbackInfo ci) {
         if (DataNpcRpg.playersEditingRpgData.containsKey(player.getUniqueID())) {
             ci.cancel();
+            NoppesUtilServer.setEditingNpc(player, null);
             DataNpcRpg.playersEditingRpgData.remove(player.getUniqueID());
 
             DataNpcRpg data = new DataNpcRpg(npc, false);
@@ -49,7 +50,6 @@ public class MixinPacketHandlerServer {
                 if (npc.linkedData != null) {
                     LinkedNpcController.Instance.saveNpcData(npc);
                 }
-                NoppesUtilServer.setEditingNpc(player, null);
             } catch (Exception e) {
                 e.printStackTrace();
             }

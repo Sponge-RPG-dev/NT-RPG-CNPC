@@ -1,5 +1,7 @@
 package ru.glassspirit.cnpcntrpg.forge;
 
+import com.electronwill.nightconfig.core.Config;
+import com.electronwill.nightconfig.hocon.HoconFormat;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
@@ -17,6 +19,8 @@ public class DataNpcRpg extends DataScript {
 
     public static final Map<UUID, UUID> playersEditingRpgData = new HashMap<>();
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private static final String emptyEffectsString = "Effects: [\n]";
+    private static final Config emptyEffectsConfig = HoconFormat.instance().createParser().parse(emptyEffectsString);
 
     private EntityNPCInterface npc;
 
@@ -27,6 +31,7 @@ public class DataNpcRpg extends DataScript {
             setEnabled(true);
             initNpcData();
             initProperties();
+            initEffects();
         }
     }
 
@@ -35,7 +40,8 @@ public class DataNpcRpg extends DataScript {
         mainContainer.appandConsole("This is RPG data of NPC.");
         mainContainer.appandConsole("Do not create new tabs or attach scripts (THIS IS NOT A SCRIPTING GUI!!!)");
         mainContainer.appandConsole("1. First tab is for additional NPC data");
-        mainContainer.appandConsole("2. Second tab is for nt-rpg properties.");
+        mainContainer.appandConsole("2. Second tab is for NT-RPG properties.");
+        mainContainer.appandConsole("3. Third tab is for NT-RPG GlobalEffects");
 
         Map<String, Object> dataMap = new LinkedTreeMap<>();
         dataMap.put("Level", ((IMixinDataStats) npc.stats).getLevel());
@@ -47,14 +53,27 @@ public class DataNpcRpg extends DataScript {
 
     private void initProperties() {
         ScriptContainer container = new ScriptContainer(this);
-        Map<String, Double> properties = ((IMixinDataStats) npc.stats).getProperties();
+        Map<String, Double> properties = ((IMixinDataStats) npc.stats).getStoredProperties();
         container.script += gson.toJson(properties);
+        this.getScripts().add(container);
+    }
+
+    private void initEffects() {
+        ScriptContainer container = new ScriptContainer(this);
+        String effectsString = ((IMixinDataStats) npc.stats).getDefaultEffects().trim();
+        if (effectsString.isEmpty()) effectsString = emptyEffectsString;
+
+        Config conf = HoconFormat.instance().createParser().parse(effectsString);
+        if (!conf.contains("Effects")) conf = emptyEffectsConfig;
+        container.script += HoconFormat.instance().createWriter().writeToString(conf);
+
         this.getScripts().add(container);
     }
 
     public void apply() {
         applyNpcData();
         applyProperties();
+        applyEffects();
     }
 
     private void applyNpcData() {
@@ -71,7 +90,17 @@ public class DataNpcRpg extends DataScript {
         Map<String, Double> dataMap = gson.fromJson(data, new TypeToken<LinkedTreeMap<String, Double>>() {
         }.getType());
 
-        ((IMixinDataStats) npc.stats).getProperties().putAll(dataMap);
+        ((IMixinDataStats) npc.stats).getStoredProperties().putAll(dataMap);
+    }
+
+    private void applyEffects() {
+        String data = this.getScripts().get(2).script;
+        Config conf = HoconFormat.instance().createParser().parse(data);
+        if (!conf.contains("Effects")) {
+            ((IMixinDataStats) npc.stats).setDefaultEffects("");
+        } else {
+            ((IMixinDataStats) npc.stats).setDefaultEffects(HoconFormat.instance().createWriter().writeToString(conf));
+        }
     }
 
 }

@@ -11,10 +11,8 @@ public class MixinHooksHelper {
 
     public static void onNpcReset(Object npc) {
         SpongeEntityService entityService = (SpongeEntityService) Rpg.get().getEntityService();
-        if (entityService.get((Living) npc) != null) {
-            entityService.remove((Living) npc);
-            entityService.get((Living) npc);
-        }
+        entityService.remove((Living) npc);
+        entityService.get((Living) npc);
     }
 
     public static boolean isItemizerLoaded() {

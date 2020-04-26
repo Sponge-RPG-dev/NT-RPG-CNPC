@@ -20,24 +20,29 @@ public abstract class MixinDataStats implements IMixinDataStats {
 
     private int level;
     private Map<String, Object> customData = new LinkedTreeMap<>();
-    private Map<String, Double> properties = new LinkedTreeMap<>();
+    private Map<String, Double> storedProperties = new LinkedTreeMap<>();
+
+    private String defaultEffects;
 
     @Inject(method = "writeToNBT", at = @At("TAIL"), remap = false)
     private void injectWriteNbt(NBTTagCompound tag, CallbackInfoReturnable<NBTTagCompound> ci) {
-        tag.setInteger("Level", level);
-        tag.setString("CustomData", gson.toJson(customData));
-        tag.setString("Properties", gson.toJson(properties));
+        tag.setInteger("Level", getLevel());
+        tag.setString("CustomData", gson.toJson(getCustomData()));
+        tag.setString("Properties", gson.toJson(getStoredProperties()));
+        tag.setString("DefaultEffects", getDefaultEffects());
     }
 
     @Inject(method = "readToNBT", at = @At("TAIL"), remap = false)
     private void injectReadNbt(NBTTagCompound tag, CallbackInfo ci) {
-        this.level = tag.getInteger("Level");
+        this.setLevel(tag.getInteger("Level"));
 
         Map<String, Object> customDataMap = gson.fromJson(tag.getString("CustomData"), LinkedTreeMap.class);
         if (customDataMap != null) this.customData.putAll(customDataMap);
 
         Map<String, Double> propertiesMap = gson.fromJson(tag.getString("Properties"), LinkedTreeMap.class);
-        if (propertiesMap != null) this.properties.putAll(propertiesMap);
+        if (propertiesMap != null) this.storedProperties.putAll(propertiesMap);
+
+        this.setDefaultEffects(tag.getString("DefaultEffects"));
     }
 
     @Override
@@ -56,7 +61,17 @@ public abstract class MixinDataStats implements IMixinDataStats {
     }
 
     @Override
-    public Map<String, Double> getProperties() {
-        return properties;
+    public Map<String, Double> getStoredProperties() {
+        return storedProperties;
+    }
+
+    @Override
+    public void setDefaultEffects(String e) {
+        this.defaultEffects = e;
+    }
+
+    @Override
+    public String getDefaultEffects() {
+        return defaultEffects;
     }
 }

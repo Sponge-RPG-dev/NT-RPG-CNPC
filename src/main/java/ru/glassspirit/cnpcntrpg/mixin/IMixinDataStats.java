@@ -10,6 +10,10 @@ public interface IMixinDataStats {
 
     Map<String, Object> getCustomData();
 
-    Map<String, Double> getProperties();
+    Map<String, Double> getStoredProperties();
+
+    void setDefaultEffects(String e);
+
+    String getDefaultEffects();
 
 }

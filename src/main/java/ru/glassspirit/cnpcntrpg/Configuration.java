@@ -21,4 +21,6 @@ public class Configuration {
     @Setting(value = "availability_rpg_level", comment = "Use RPG character level for availability checks")
     public boolean AVAILABILITY_RPG_LEVEL = true;
 
+    @Setting(value = "initialize_npcs", comment = "Initialize NPCs in NT-RPG EntityService when NPC is initialized. It allows applying properties and effects on NPC.")
+    public boolean INITIALIZE_NPCS = true;
 }
