@@ -24,7 +24,7 @@
     /*
      *	IMPORTS
      */
-    const NpcDialog = Java.type("noppes.npcs.controllers.data.Dialog")
+    const NpcDialog = Java.type("noppes.npcs.controllers.data.Dialog");
     const NpcDialogOption = Java.type("noppes.npcs.controllers.data.DialogOption");
     const NpcEntityDialogNpc = Java.type("noppes.npcs.entity.EntityDialogNpc");
 
@@ -35,6 +35,7 @@
         d: function () {
             return {
                 d: new NpcDialog(null),
+                availability: this.d.availability,
                 text: function (t) {
                     if (t !== undefined) {
                         this.d.text = t;
@@ -49,6 +50,9 @@
                     let options = this.d.getClass().getField("options").get(this.d);
                     option.slot = options.size();
                     options.put(options.size(), option);
+                },
+                setQuest: function (questId) {
+                    this.d.getClass().getField("quest").set(this.d, questId);
                 },
                 show: function (player, npc) {
                     MagicDialog.show(player, this.d, npc)
