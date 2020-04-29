@@ -8,10 +8,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import ru.glassspirit.cnpcntrpg.sponge.CnpcRpgSponge;
 
-@Mixin(CustomNpcs.class)
+@Mixin(value = CustomNpcs.class, remap = false)
 public abstract class MixinCustomNpcs {
 
-    @Inject(method = "load(Lnet/minecraftforge/fml/common/event/FMLPreInitializationEvent;)V", at = @At("HEAD"), remap = false)
+    @Inject(method = "load(Lnet/minecraftforge/fml/common/event/FMLPreInitializationEvent;)V", at = @At("HEAD"))
     private void onLoad(FMLPreInitializationEvent ev, CallbackInfo ci) {
         CnpcRpgSponge.useMixins = true;
     }

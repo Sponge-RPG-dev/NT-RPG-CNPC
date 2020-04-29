@@ -13,7 +13,7 @@ import ru.glassspirit.cnpcntrpg.mixin.IMixinDataStats;
 
 import java.util.Map;
 
-@Mixin(DataStats.class)
+@Mixin(value = DataStats.class, remap = false)
 public abstract class MixinDataStats implements IMixinDataStats {
 
     private static final Gson gson = new Gson();
@@ -23,27 +23,6 @@ public abstract class MixinDataStats implements IMixinDataStats {
     private Map<String, Double> storedProperties = new LinkedTreeMap<>();
 
     private String defaultEffects = "";
-
-    @Inject(method = "writeToNBT", at = @At("TAIL"), remap = false)
-    private void injectWriteNbt(NBTTagCompound tag, CallbackInfoReturnable<NBTTagCompound> ci) {
-        tag.setInteger("Level", getLevel());
-        tag.setString("CustomData", gson.toJson(getCustomData()));
-        tag.setString("Properties", gson.toJson(getStoredProperties()));
-        tag.setString("DefaultEffects", getDefaultEffects());
-    }
-
-    @Inject(method = "readToNBT", at = @At("TAIL"), remap = false)
-    private void injectReadNbt(NBTTagCompound tag, CallbackInfo ci) {
-        this.setLevel(tag.getInteger("Level"));
-
-        Map<String, Object> customDataMap = gson.fromJson(tag.getString("CustomData"), LinkedTreeMap.class);
-        if (customDataMap != null) this.customData.putAll(customDataMap);
-
-        Map<String, Double> propertiesMap = gson.fromJson(tag.getString("Properties"), LinkedTreeMap.class);
-        if (propertiesMap != null) this.storedProperties.putAll(propertiesMap);
-
-        this.setDefaultEffects(tag.getString("DefaultEffects"));
-    }
 
     @Override
     public int getLevel() {
@@ -73,5 +52,26 @@ public abstract class MixinDataStats implements IMixinDataStats {
     @Override
     public String getDefaultEffects() {
         return defaultEffects;
+    }
+
+    @Inject(method = "writeToNBT", at = @At("TAIL"))
+    private void injectWriteNbt(NBTTagCompound tag, CallbackInfoReturnable<NBTTagCompound> ci) {
+        tag.setInteger("Level", getLevel());
+        tag.setString("CustomData", gson.toJson(getCustomData()));
+        tag.setString("Properties", gson.toJson(getStoredProperties()));
+        tag.setString("DefaultEffects", getDefaultEffects());
+    }
+
+    @Inject(method = "readToNBT", at = @At("TAIL"))
+    private void injectReadNbt(NBTTagCompound tag, CallbackInfo ci) {
+        this.setLevel(tag.getInteger("Level"));
+
+        Map<String, Object> customDataMap = gson.fromJson(tag.getString("CustomData"), LinkedTreeMap.class);
+        if (customDataMap != null) this.customData.putAll(customDataMap);
+
+        Map<String, Double> propertiesMap = gson.fromJson(tag.getString("Properties"), LinkedTreeMap.class);
+        if (propertiesMap != null) this.storedProperties.putAll(propertiesMap);
+
+        this.setDefaultEffects(tag.getString("DefaultEffects"));
     }
 }
