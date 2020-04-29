@@ -21,15 +21,15 @@ public class MixinDialogOption implements IMixinDialogOption {
     @Shadow
     public int optionColor;
 
-    private Object script;
+    private String script = "";
 
     @Override
-    public Object getScript() {
+    public String getScript() {
         return script;
     }
 
     @Override
-    public void setScript(Object script) {
+    public void setScript(String script) {
         this.script = script;
         this.optionType = 5;
     }
@@ -65,7 +65,7 @@ public class MixinDialogOption implements IMixinDialogOption {
         compound.setInteger("Dialog", this.dialogId);
         compound.setInteger("DialogColor", this.optionColor);
         compound.setString("DialogCommand", this.command);
-        if (this.script != null) compound.setString("Script", this.script.toString());
+        compound.setString("Script", this.script);
         return compound;
     }
 }

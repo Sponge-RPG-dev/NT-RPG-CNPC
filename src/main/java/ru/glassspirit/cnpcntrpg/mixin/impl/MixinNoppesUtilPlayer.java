@@ -70,15 +70,13 @@ public abstract class MixinNoppesUtilPlayer {
                             } else if (option.optionType == 5 /* Script option */) {
                                 try {
                                     ScriptEngine engine = Rpg.get().getScriptEngine().getEngine();
-                                    IMixinDialogOption optionScripted = (IMixinDialogOption) option;
-                                    if (optionScripted.getScript() instanceof String) {
-                                        optionScripted.setScript(engine.eval((String) optionScripted.getScript()));
-                                    }
-                                    engine.eval("var runScriptOptionFunc = function(option, player, npc) {\n" +
-                                            "    return option.script(player, npc);\n" +
+                                    String script = ((IMixinDialogOption) option).getScript();
+                                    Object optionFunc = engine.eval("function(dialog, player, npc) { " + script + "}");
+                                    engine.eval("var cnpcNtRpgRunScript = function(f, dialog, player, npc) {\n" +
+                                            "    return f(dialog, player, npc);\n" +
                                             "}");
                                     Invocable i = (Invocable) engine;
-                                    i.invokeFunction("runScriptOptionFunc", option, NpcAPI.Instance().getIEntity(player));
+                                    i.invokeFunction("cnpcNtRpgRunScript", optionFunc, dialog, NpcAPI.Instance().getIEntity(player), NpcAPI.Instance().getIEntity(npc));
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }

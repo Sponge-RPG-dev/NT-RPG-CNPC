@@ -2,8 +2,8 @@ package ru.glassspirit.cnpcntrpg.mixin;
 
 public interface IMixinDialogOption {
 
-    void setScript(Object script);
+    void setScript(String script);
 
-    Object getScript();
+    String getScript();
 
 }
