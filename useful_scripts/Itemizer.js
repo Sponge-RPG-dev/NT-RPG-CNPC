@@ -1,8 +1,9 @@
 /**
- Script to use Itemizer plugin in scripts with ease!
- To make it work properly, follow this steps:
- 1. Add '-Dnashorn.args=--language=es6' to your server start.bat/start.sh file (example: java -jar -Dnashorn.args=--language=es6 forge-1.12.2-14.23.5.2847-universal.jar)
- 2. Read the javadocs to methods (god help)
+ * Script to use Itemizer plugin in scripts with ease!
+ * To make it work properly, follow this steps:
+ * 1. Add '-Dnashorn.args=--language=es6' to your server start.bat/start.sh file (example: java -jar -Dnashorn.args=--language=es6 forge-1.12.2-14.23.5.2847-universal.jar)
+ *
+ * 2. Read the javadocs to methods (god help)
  */
 {
     /*
