@@ -22,8 +22,13 @@ import java.util.UUID;
 
 public class CnpcRpgEntityHandler extends AbstractEntityService.EntityHandler<SpongeMob> {
 
+    /**
+     * Initialize NPCs stored properties and apply effects
+     */
     @Override
     public SpongeMob initializeEntity(MobSettingsDao dao, SpongeMob iEntity, String dimName, String type) {
+        if (!CnpcRpgSponge.useMixins) return super.initializeEntity(dao, iEntity, dimName, type);
+
         if (iEntity.getEntity() instanceof EntityNPCInterface) {
             IMixinDataStats rpgStats = (IMixinDataStats) ((EntityNPCInterface) iEntity.getEntity()).stats;
 
@@ -46,6 +51,9 @@ public class CnpcRpgEntityHandler extends AbstractEntityService.EntityHandler<Sp
         } else return super.initializeEntity(dao, iEntity, dimName, type);
     }
 
+    /**
+     * Gain experience based on NPC exp value, not by NT-RPG config
+     */
     @Override
     public double getExperiences(MobSettingsDao dao, String dimension, String type, UUID uuid) {
         if (CnpcRpgSponge.configuration.NPC_KILLS_EXP_RPG) {
@@ -60,6 +68,9 @@ public class CnpcRpgEntityHandler extends AbstractEntityService.EntityHandler<Sp
         return super.getExperiences(dao, dimension, type, uuid);
     }
 
+    /**
+     * Do not handle damage of NPCs in NT-RPG style
+     */
     @Override
     public boolean handleMobDamage(String dimension, UUID uuid) {
         Optional<World> world = Sponge.getServer().getWorld(dimension);

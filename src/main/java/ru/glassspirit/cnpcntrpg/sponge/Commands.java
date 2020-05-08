@@ -1,5 +1,6 @@
 package ru.glassspirit.cnpcntrpg.sponge;
 
+import cz.neumimto.rpg.api.Rpg;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.RayTraceResult;
 import noppes.npcs.CustomNpcsPermissions;
@@ -11,9 +12,11 @@ import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.util.IPermission;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandResult;
+import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.common.entity.EntityUtil;
 import ru.glassspirit.cnpcntrpg.forge.DataNpcRpg;
 
@@ -46,12 +49,30 @@ public class Commands {
                 })
                 .build();
 
-        CommandSpec mainCommand = CommandSpec.builder()
+        CommandSpec npcCommand = CommandSpec.builder()
                 .description(Text.of("Main CNPC-RPG command"))
                 .child(dataCommand, "data")
                 .build();
 
-        Sponge.getCommandManager().register(CnpcRpgSponge.instance, mainCommand, "npc");
+        Sponge.getCommandManager().register(CnpcRpgSponge.instance, npcCommand, "npc");
+
+        CommandSpec jsCommand = CommandSpec.builder()
+                .description(Text.of("Execute some js code"))
+                .permission("ntrpg.admin")
+                .arguments(GenericArguments.remainingRawJoinedStrings(Text.of("script")))
+                .executor((src, args) -> {
+                    String script = (String) args.getOne("script").get();
+                    try {
+                        Object result = Rpg.get().getScriptEngine().getEngine().eval(script);
+                        src.sendMessage(Text.of(TextColors.RED, "[NT-RPG-JS]: ", TextColors.RESET, result != null ? result : "success"));
+                    } catch (Exception e) {
+                        src.sendMessage(Text.of(TextColors.RED, "[NT-RPG-JS]: ", e.getMessage()));
+                        e.printStackTrace();
+                    }
+                    return CommandResult.empty();
+                })
+                .build();
+        Sponge.getCommandManager().register(CnpcRpgSponge.instance, jsCommand, "js");
     }
 
 }

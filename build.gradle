@@ -55,7 +55,7 @@ dependencies {
     implementation('org.spongepowered:spongeforge:' + project.spongeForgeVersion + ':dev') {
         exclude module: 'testmods'
     }
-    implementation 'com.github.Sponge-RPG-dev.NT-RPG:Sponge-7:2.1.0-SNAPSHOT'
+    implementation 'com.github.Sponge-RPG-dev.NT-RPG:Sponge-7:5.1.2020Sponge2'
 }
 
 configurations.all {

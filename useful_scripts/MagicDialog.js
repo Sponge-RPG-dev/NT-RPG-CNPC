@@ -1,21 +1,19 @@
 /**
  * Script to create simple dialogs on the fly!
  * To make it work properly, follow this steps:
- * 1. Add '-Dnashorn.args=--language=es6' to your server start.bat/start.sh file (example: java -jar -Dnashorn.args=--language=es6 forge-1.12.2-14.23.5.2847-universal.jar)
+ * 1. Create empty dialog using MD.d() inside CNPC or NT-RPG script
  *
- * 2. Create empty dialog using MD.d() inside CNPC or NT-RPG script
- *
- * 3. Configure this dialog using cool builder style
+ * 2. Configure this dialog using cool builder style
  * Example:
  * var dialog = MD.d().text("Hello traveller!").addText("How are you?").addText("Pleace take a seat!\nIts pretty hot today...");
  *
- * 4. Configure and add dialog options using MD.o()
+ * 3. Configure and add dialog options using MD.o()
  * Example:
  * MD.o().title("Dialog 5").dialog(5).color(0xFF0000).addTo(dialog); // Red colored option that opens dialog with Id = 5 (for colors see RGB -> HEX color converter)
  * MD.o().title("Command").command("say Hello").addTo(dialog); // Option that executes command
  * MD.o().title("Script").script("log('I am script, yay')").addTo(dialog); // Option that executes script (most advanced and usefull feature!). Available variables are: dialog, player, npc
  *
- * 5. Show the new cool dialog to player using dialog.show(player, npc). If you have no npc (showing dialog from NT-RPG script), just specify NPC name.
+ * 4. Show the new cool dialog to player using dialog.show(player, npc). If you have no npc (showing dialog from NT-RPG script), just specify NPC name.
  * Example:
  * dialog.show(event.player, event.npc); // From CNPC script
  * dialog.show(player) or dialog.show(player, "NpcName"); // From NT-RPG script
