@@ -6,8 +6,8 @@ buildscript {
             url = "https://files.minecraftforge.net/maven"
         }
         maven {
-            name = 'sponge'
-            url = 'https://repo.spongepowered.org/maven'
+            name = "sponge"
+            url = "https://repo.spongepowered.org/maven"
         }
         maven {
             url = "https://plugins.gradle.org/m2/"
@@ -15,26 +15,26 @@ buildscript {
     }
     dependencies {
         classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
-        classpath 'org.spongepowered:mixingradle:0.6-SNAPSHOT'
+        classpath "org.spongepowered:mixingradle:0.6-SNAPSHOT"
         classpath "gradle.plugin.org.spongepowered:spongegradle:0.8.1"
     }
 }
 
 apply plugin: "net.minecraftforge.gradle.forge"
 apply plugin: "org.spongepowered.plugin"
-apply plugin: 'org.spongepowered.mixin'
+apply plugin: "org.spongepowered.mixin"
 
 version = modVersion
 group = modGroup
 archivesBaseName = modBaseName
 
 sourceCompatibility = targetCompatibility = 1.8
-compileJava.options.encoding = compileTestJava.options.encoding = 'UTF-8'
+compileJava.options.encoding = compileTestJava.options.encoding = "UTF-8"
 
 sponge {
     plugin {
         meta {
-            id = 'cnpc-ntrpg'
+            id = "cnpc-ntrpg"
         }
     }
 }
@@ -47,25 +47,25 @@ minecraft {
 
 repositories {
     mavenCentral()
-    maven { url 'https://jitpack.io' }
+    maven { url = "https://jitpack.io" }
     maven { url = "https://repo.aikar.co/content/groups/aikar/" }
 }
 
 dependencies {
-    implementation('org.spongepowered:spongeforge:' + project.spongeForgeVersion + ':dev') {
-        exclude module: 'testmods'
+    implementation("org.spongepowered:spongeforge:" + project.spongeForgeVersion + ":dev") {
+        exclude module: "testmods"
     }
-    implementation 'com.github.Sponge-RPG-dev.NT-RPG:Sponge-7:5.1.2020Sponge2'
+    implementation "com.github.Sponge-RPG-dev.NT-RPG:Sponge-7:15.5.2020SpongeSpigot2"
 }
 
 configurations.all {
-    resolutionStrategy.cacheDynamicVersionsFor 10, 'minutes'
-    resolutionStrategy.cacheChangingModulesFor 10, 'minutes'
+    resolutionStrategy.cacheDynamicVersionsFor 10, "minutes"
+    resolutionStrategy.cacheChangingModulesFor 10, "minutes"
 }
 
 sourceSets {
     main {
-        ext.refMap = 'mixins.cnpcntrpg.refmap.json'
+        ext.refMap = "mixins.cnpcntrpg.refmap.json"
     }
 }
 

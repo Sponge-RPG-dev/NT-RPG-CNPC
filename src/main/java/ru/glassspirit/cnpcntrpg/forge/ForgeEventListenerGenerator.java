@@ -1,8 +1,9 @@
 package ru.glassspirit.cnpcntrpg.forge;
 
 import cz.neumimto.rpg.api.logging.Log;
-import cz.neumimto.rpg.sponge.scripting.SpongeClassGenerator;
+import cz.neumimto.rpg.common.bytecode.ClassGenerator;
 import jdk.internal.dynalink.beans.StaticClass;
+import jdk.nashorn.api.scripting.JSObject;
 import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.annotation.AnnotationDescription;
@@ -17,10 +18,11 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class ForgeEventListenerGenerator {
+public class ForgeEventListenerGenerator extends ClassGenerator {
 
     private static ClassLoader asmClassLoader;
     private static Class forgeEventListener;
@@ -35,7 +37,7 @@ public class ForgeEventListenerGenerator {
         }
     }
 
-    public static void registerDynamicListener(List<ScriptObjectMirror> list) {
+    public void registerDynamicListener(List<JSObject> list) {
         if (forgeEventListener != null) {
             Log.info("Found Forge JS listener: " + forgeEventListener.getSimpleName() + " Unregistering");
             MinecraftForge.EVENT_BUS.unregister(forgeEventListener);
@@ -46,7 +48,7 @@ public class ForgeEventListenerGenerator {
         MinecraftForge.EVENT_BUS.register(forgeEventListener);
     }
 
-    private static Class generateForgeListenerClass(List<ScriptObjectMirror> list) {
+    private Class generateForgeListenerClass(List<JSObject> list) {
         Class c = null;
         try {
             String name = "DynamicForgeListener" + System.currentTimeMillis();
@@ -57,12 +59,39 @@ public class ForgeEventListenerGenerator {
                     .name(name);
 
             int i = 0;
-            for (ScriptObjectMirror obj : list) {
-                Class<?> type = ((StaticClass) obj.get("type")).getRepresentedClass();
-                Consumer consumer = (event) -> obj.callMember("consumer", event);
+            for (JSObject object : list) {
+                if (!object.hasMember("consumer") || !((JSObject) object.getMember("consumer")).isFunction()) {
+                    Log.warn("JS event listener missing function consumer, skipping");
+                    continue;
+                }
+                ScriptObjectMirror mirror = (ScriptObjectMirror) object.getMember("consumer");
+                Consumer consumer = (event) -> mirror.call(mirror, event);
 
-                EventPriority priority = EventPriority.valueOf(extract(obj, "priority", "NORMAL"));
-                String methodName = extract(obj, "methodName", "e" + i);
+                if (!object.hasMember("type")) {
+                    Log.warn("Js event listener missing node type, skipping");
+                    continue;
+                }
+                String className = "";
+                Object typeObj = object.getMember("type");
+                StaticClass staticClass;
+                if (typeObj instanceof StaticClass) {
+                    staticClass = (StaticClass) typeObj;
+                    className = staticClass.getRepresentedClass().getName();
+                    Log.warn("JS event listener for the event " + className + ", it's no longer needed to reference the class (Java.type(...)), use only the wrapped string");
+                } else {
+                    className = (String) typeObj;
+                }
+
+                Class type;
+                try {
+                    type = Class.forName(className);
+                } catch (ClassNotFoundException e) {
+                    Log.warn("JS event listener - unknown event " + className);
+                    continue;
+                }
+
+                EventPriority priority = EventPriority.valueOf(extract(object, "priority", "NORMAL"));
+                String methodName = extract(object, "methodName", "e" + i);
 
                 AnnotationDescription annotation = AnnotationDescription.Builder.ofType(SubscribeEvent.class)
                         .define("priority", priority)
@@ -70,7 +99,7 @@ public class ForgeEventListenerGenerator {
 
                 classBuilder = classBuilder.defineMethod(methodName, void.class, Visibility.PUBLIC, Ownership.STATIC)
                         .withParameter(type, "event")
-                        .intercept(MethodDelegation.to(new SpongeClassGenerator.EventHandlerInterceptor(consumer)))
+                        .intercept(MethodDelegation.to(new EventHandlerInterceptor(consumer)))
                         .annotateMethod(annotation);
 
                 i++;
@@ -83,7 +112,16 @@ public class ForgeEventListenerGenerator {
         return c;
     }
 
-    private static <T> T extract(ScriptObjectMirror obj, String key, T def) {
-        return obj.hasMember(key) ? (T) obj.get(key) : def;
+    @Override
+    protected Type getListenerSubclass() {
+        // NOOP
+        return Object.class;
     }
+
+    @Override
+    protected DynamicType.Builder<Object> visitImplSpecAnnListener(DynamicType.Builder.MethodDefinition.ReceiverTypeDefinition<Object> classBuilder, JSObject object) {
+        // NOOP
+        return null;
+    }
+
 }

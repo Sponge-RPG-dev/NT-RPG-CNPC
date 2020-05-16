@@ -25,7 +25,7 @@
     /*
      *  IMPORTS
      */
-    const FORGE_EVENT_LISTENER_GENERATOR = Java.type("ru.glassspirit.cnpcntrpg.forge.ForgeEventListenerGenerator");
+    const FORGE_EVENT_LISTENER_GENERATOR = new (Java.type("ru.glassspirit.cnpcntrpg.forge.ForgeEventListenerGenerator"));
 
     /*
      *  CONSTANTS
