@@ -20,6 +20,10 @@ import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.common.entity.EntityUtil;
 import ru.glassspirit.cnpcntrpg.forge.DataNpcRpg;
 
+import javax.script.Bindings;
+import javax.script.ScriptContext;
+import javax.script.SimpleBindings;
+
 public class Commands {
 
     Commands() {
@@ -63,7 +67,13 @@ public class Commands {
                 .executor((src, args) -> {
                     String script = (String) args.getOne("script").get();
                     try {
-                        Object result = Rpg.get().getScriptEngine().getEngine().eval(script);
+                        Bindings engineBindings = Rpg.get().getScriptEngine().getEngine().getBindings(ScriptContext.ENGINE_SCOPE);
+                        Bindings tempBindings = new SimpleBindings();
+                        tempBindings.putAll(engineBindings);
+                        if (src instanceof Player) {
+                            tempBindings.put("player", src);
+                        }
+                        Object result = Rpg.get().getScriptEngine().getEngine().eval(script, tempBindings);
                         src.sendMessage(Text.of(TextColors.RED, "[NT-RPG-JS]: ", TextColors.RESET, result != null ? result : "success"));
                     } catch (Exception e) {
                         src.sendMessage(Text.of(TextColors.RED, "[NT-RPG-JS]: ", e.getMessage()));
