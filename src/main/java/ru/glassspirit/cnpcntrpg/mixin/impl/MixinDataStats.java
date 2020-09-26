@@ -19,8 +19,8 @@ public abstract class MixinDataStats implements IMixinDataStats {
     private static final Gson gson = new Gson();
 
     private int level;
-    private Map<String, Object> customData = new LinkedTreeMap<>();
-    private Map<String, Double> storedProperties = new LinkedTreeMap<>();
+    private final Map<String, Object> customData = new LinkedTreeMap<>();
+    private final Map<String, Double> storedProperties = new LinkedTreeMap<>();
 
     private String defaultEffects = "";
 

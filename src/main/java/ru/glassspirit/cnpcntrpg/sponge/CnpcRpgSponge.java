@@ -22,7 +22,7 @@ import ru.glassspirit.cnpcntrpg.Configuration;
         id = "cnpc-ntrpg",
         name = "NT-RPG CustomNPCs Bridge",
         description = "Plugin that connects NT-RPG plugin and CustomNPCs mod and adds some useful stuff",
-        version = "1.5",
+        version = "1.6",
         authors = {"GlassSpirit"},
         dependencies = {
                 @Dependency(id = "nt-rpg"),

@@ -57,4 +57,9 @@ public class MixinAvailablilty implements IMixinAvailability {
         this.requiredClassName = tag.getString("AvailabilityRequiredClassName");
         this.requiredClassLevel = tag.getInteger("AvailabilityRequiredClassLevel");
     }
+
+    @Inject(method = "checkHasOptions", at = @At("HEAD"), cancellable = true)
+    private void onCheckHasOptions(CallbackInfoReturnable<Boolean> ci) {
+        if (!requiredClassName.isEmpty()) ci.setReturnValue(true);
+    }
 }
