@@ -52,10 +52,7 @@
     }
 
     function generateForgeListener() {
-        if (!FORGE_EVENTS.isEmpty()) {
-            log("generateForgeListener");
-            FORGE_EVENT_LISTENER_GENERATOR.registerDynamicListener(FORGE_EVENTS);
-        }
+        FORGE_EVENT_LISTENER_GENERATOR.registerDynamicListener(FORGE_EVENTS);
         FORGE_EVENTS.clear();
     }
 

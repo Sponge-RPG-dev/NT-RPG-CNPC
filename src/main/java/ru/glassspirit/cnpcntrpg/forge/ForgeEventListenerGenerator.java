@@ -43,9 +43,11 @@ public class ForgeEventListenerGenerator extends ClassGenerator {
             MinecraftForge.EVENT_BUS.unregister(forgeEventListener);
             forgeEventListener = null;
         }
-        forgeEventListener = generateForgeListenerClass(list);
-        Log.info("Registering Forge JS listener: " + forgeEventListener.getSimpleName());
-        MinecraftForge.EVENT_BUS.register(forgeEventListener);
+        if (list.size() > 0) {
+            forgeEventListener = generateForgeListenerClass(list);
+            Log.info("Registering Forge JS listener: " + forgeEventListener.getSimpleName());
+            MinecraftForge.EVENT_BUS.register(forgeEventListener);
+        }
     }
 
     private Class generateForgeListenerClass(List<JSObject> list) {
