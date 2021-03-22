@@ -14,14 +14,16 @@ buildscript {
         }
     }
     dependencies {
-        classpath "net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT"
-        classpath "org.spongepowered:mixingradle:0.6-SNAPSHOT"
-        classpath "gradle.plugin.org.spongepowered:spongegradle:0.8.1"
+        classpath "net.minecraftforge.gradle:ForgeGradle:3.+"
+        classpath "org.spongepowered:mixingradle:0.7-SNAPSHOT"
     }
 }
 
-apply plugin: "net.minecraftforge.gradle.forge"
-apply plugin: "org.spongepowered.plugin"
+plugins {
+    id 'org.spongepowered.plugin' version '0.9.0'
+}
+
+apply plugin: "net.minecraftforge.gradle"
 apply plugin: "org.spongepowered.mixin"
 
 version = modVersion
@@ -31,18 +33,17 @@ archivesBaseName = modBaseName
 sourceCompatibility = targetCompatibility = 1.8
 compileJava.options.encoding = compileTestJava.options.encoding = "UTF-8"
 
+minecraft {
+    mappings channel: "stable", version: "39-1.12"
+}
+
 sponge {
     plugin {
         meta {
             id = "cnpc-ntrpg"
+            version = modVersion
         }
     }
-}
-
-minecraft {
-    version = project.forgeVersion
-    mappings = project.mcpVersion
-    runDir = "run"
 }
 
 repositories {
@@ -52,15 +53,31 @@ repositories {
 }
 
 dependencies {
+    minecraft "net.minecraftforge:forge:" + project.forgeVersion
     implementation("org.spongepowered:spongeforge:" + project.spongeForgeVersion + ":dev") {
         exclude module: "testmods"
     }
     implementation "com.github.Sponge-RPG-dev.NT-RPG:Sponge-7:30.5.2020SpongeSpigot"
+    implementation fileTree("$projectDir/libs")
 }
 
-configurations.all {
+/*configurations.all {
     resolutionStrategy.cacheDynamicVersionsFor 10, "minutes"
     resolutionStrategy.cacheChangingModulesFor 10, "minutes"
+}*/
+
+// Comment out for non-mixin build
+jar {
+    manifest {
+        attributes(
+                "TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
+                "TweakOrder": 0,
+                "MixinConfigs": "mixins.cnpcntrpg.json",
+                "FMLCorePluginContainsFMLMod": "true",
+                "ForceLoadAsMod": "true",
+                "FMLAT": "cnpcs_at.cfg"
+        )
+    }
 }
 
 sourceSets {
@@ -69,16 +86,4 @@ sourceSets {
     }
 }
 
-processResources {
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
-
-    from(sourceSets.main.resources.srcDirs) {
-        include "mcmod.info"
-        expand "version": project.version, "mcversion": project.minecraft.version
-    }
-
-    from(sourceSets.main.resources.srcDirs) {
-        exclude "mcmod.info"
-    }
-}
+jar.finalizedBy("reobfJar")
